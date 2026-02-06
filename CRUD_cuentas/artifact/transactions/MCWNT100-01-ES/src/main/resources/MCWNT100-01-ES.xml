@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<transaction xmlns="http://www.w3schools.com" transactionName="MCWNT100" application="MCWN" version="01" country="ES" language="ES">
+	<paramsIn/>
+	<paramsOut/>
+	<description>Transacción para la creación de cuenta</description>
+</transaction>

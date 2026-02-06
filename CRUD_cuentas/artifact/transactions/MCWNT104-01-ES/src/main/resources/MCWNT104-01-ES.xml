@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<transaction xmlns="http://www.w3schools.com" transactionName="MCWNT104" application="MCWN" version="01" country="ES" language="ES">
+	<paramsIn/>
+	<paramsOut/>
+	<description>Transacción para la eliminación de cuenta</description>
+</transaction>

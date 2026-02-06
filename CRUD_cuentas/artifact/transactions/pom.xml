@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>CRUD_cuentas</artifactId>
+		<groupId>com.bbva.mcwn</groupId>
+		<version>0.0.0</version>
+		<relativePath>../../</relativePath>
+	</parent>
+	<groupId>com.bbva.mcwn</groupId>
+	<artifactId>TRANSACTIONS-CRUD_cuentas</artifactId>
+	<version>0.0.0</version>
+	<packaging>pom</packaging>
+	<name>TRANSACTIONS-CRUD_cuentas</name>
+	<modules>
+		<module>MCWNT102-01-ES</module>
+		<module>MCWNT103-01-ES</module>
+		<module>MCWNT100-01-ES</module>
+		<module>MCWNT101-01-ES</module>
+		<module>MCWNT104-01-ES</module>
+		<module>MCWNT104-02-ES</module>
+	</modules>
+</project>
