@@ -45,6 +45,42 @@ public class MCWNR101Impl extends MCWNR101Abstract {
 		return null;
 	}
 
+	@Override
+	public Boolean executeGetActiveAccountWitchSameNumber(Long accountNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean executeGetActiveAccountWitchSameCard(Long accountCard) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean executeGetInactiveAccountWitchSameNumber(Long accountNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean executeGetInactiveAccountWitchSameCard(Long accountCard) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean executeGetAccountExists(Long accountNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean executeGetAccountIsActive(Long accountNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * The execute method...
 	 */

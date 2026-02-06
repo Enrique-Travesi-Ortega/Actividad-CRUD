@@ -18,5 +18,11 @@ public interface MCWNR101 {
 	List<HolderDTO> executeGetAllAccounts();
 	HolderDTO executeUpdateAccountHolderInfoTransaction(HolderDTO holderIn);
 	Boolean executeManageAccountStatusTransaction(AccountDTO accountIn);
+	Boolean executeGetActiveAccountWitchSameNumber(Long accountNumber);
+	Boolean executeGetActiveAccountWitchSameCard(Long accountCard);
+	Boolean executeGetInactiveAccountWitchSameNumber(Long accountNumber);
+	Boolean executeGetInactiveAccountWitchSameCard(Long accountCard);
+	Boolean executeGetAccountExists(Long accountNumber);
+	Boolean executeGetAccountIsActive(Long accountNumber);
 
 }
