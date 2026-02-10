@@ -37,13 +37,13 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.bbva.mcwn</groupId>
-			<artifactId>MCWNR101</artifactId>
+			<groupId>com.bbva.mcwn.dto.holder</groupId>
+			<artifactId>MCWNC100</artifactId>
 			<version>0.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.bbva.mcwn.dto.holder</groupId>
-			<artifactId>MCWNC100</artifactId>
+			<groupId>com.bbva.mcwn</groupId>
+			<artifactId>MCWNR101</artifactId>
 			<version>0.0.0</version>
 		</dependency>
 	</dependencies>
