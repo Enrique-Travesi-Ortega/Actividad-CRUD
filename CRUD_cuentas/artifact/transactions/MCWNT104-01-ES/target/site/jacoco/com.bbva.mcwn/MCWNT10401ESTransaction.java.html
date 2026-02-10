@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MCWNT10401ESTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MCWNT104-01-ES</a> &gt; <a href="index.source.html" class="el_package">com.bbva.mcwn</a> &gt; <span class="el_source">MCWNT10401ESTransaction.java</span></div><h1>MCWNT10401ESTransaction.java</h1><pre class="source lang-java linenums">package com.bbva.mcwn;
+
+import com.bbva.apx.exception.business.BusinessException;
+import com.bbva.mcwn.dto.holder.AccountDTO;
+import com.bbva.mcwn.dto.holder.AccountInDTO;
+import com.bbva.mcwn.lib.r100.MCWNR100;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Transacción para la eliminación de cuenta
+ *
+ */
+<span class="fc" id="L14">public class MCWNT10401ESTransaction extends AbstractMCWNT10401ESTransaction {</span>
+
+<span class="fc" id="L16">	private static final Logger LOGGER = LoggerFactory.getLogger(MCWNT10401ESTransaction.class);</span>
+
+	@Override
+	public void execute() {
+
+<span class="nc" id="L21">	    LOGGER.info(&quot;MCWNT104-01-ES: Transaction start (Logical delete of account)&quot;);</span>
+
+<span class="nc" id="L23">	    AccountInDTO in = this.getAccountin();</span>
+
+<span class="nc bnc" id="L25" title="All 4 branches missed.">	    if (in == null || in.getAccountNumber() == null) {</span>
+<span class="nc" id="L26">	        LOGGER.warn(&quot;MCWNT104-01-ES: accountNumber is null&quot;);</span>
+<span class="nc" id="L27">	        this.addAdvice(&quot;MCWN01415034&quot;, &quot;accountNumber is mandatory&quot;);</span>
+<span class="nc" id="L28">	        return;</span>
+	    }
+
+<span class="nc" id="L31">	    LOGGER.info(&quot;MCWNT104-01-ES: accountNumber received={}&quot;, in.getAccountNumber());</span>
+
+<span class="nc" id="L33">	    MCWNR100 r100 = this.getServiceLibrary(MCWNR100.class);</span>
+
+<span class="nc" id="L35">	    AccountDTO orchestrationIn = new AccountDTO();</span>
+<span class="nc" id="L36">	    orchestrationIn.setAccountNumber(in.getAccountNumber());</span>
+
+<span class="nc" id="L38">	    LOGGER.info(&quot;MCWNT104-01-ES: orchestrationIn.accountNumber={}&quot;,</span>
+<span class="nc" id="L39">	                orchestrationIn.getAccountNumber());</span>
+
+<span class="nc" id="L41">	    Boolean deleted = r100.executeManageAccountStatusTransaction(orchestrationIn);</span>
+
+<span class="nc" id="L43">	    this.setDeleted(Boolean.TRUE.equals(deleted));</span>
+
+<span class="nc" id="L45">	    LOGGER.info(&quot;MCWNT104-01-ES: Transaction complete, accountNumber={} deleted={}&quot;,</span>
+<span class="nc" id="L46">	                in.getAccountNumber(), deleted);</span>
+<span class="nc" id="L47">	}</span>
+
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
