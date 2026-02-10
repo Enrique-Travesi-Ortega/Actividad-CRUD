@@ -24,5 +24,6 @@ public interface MCWNR101 {
 	Boolean executeGetInactiveAccountWitchSameCard(Long accountCard);
 	Boolean executeGetAccountExists(Long accountNumber);
 	Boolean executeGetAccountIsActive(Long accountNumber);
+	Boolean executeUpdateAccountStatus(Long accountNumber, int i);
 
 }
