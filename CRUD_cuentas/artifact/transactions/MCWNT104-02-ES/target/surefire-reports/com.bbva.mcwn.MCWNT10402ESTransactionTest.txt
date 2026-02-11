@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.bbva.mcwn.MCWNT10402ESTransactionTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.832 s -- in com.bbva.mcwn.MCWNT10402ESTransactionTest

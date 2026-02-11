@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1770811122631
+Build-Jdk-Spec: 11
+Bundle-Activator: com.bbva.mcwn.MCWNT10201ESTransaction
+Bundle-Category: transaction
+Bundle-Description: Transacción para consulta de todas las cuentas
+Bundle-ManifestVersion: 2
+Bundle-Name: MCWNT102-01-ES
+Bundle-SymbolicName: MCWNT102-01-ES
+Bundle-Version: 0.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Import-Package: com.bbva.elara.transaction;version="0.0",com.bbva.mcwn.d
+ to.holder;version="0.0",com.bbva.mcwn.lib.r100;version="0.0",java.lang,
+ java.lang.invoke,java.util,java.util.function,java.util.stream,org.slf4
+ j;version="0.0"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1770811110579
+Build-Jdk-Spec: 11
+Bundle-Category: dto
+Bundle-Description: DTO que encapsula los datos de clientes y sus cuenta
+ s
+Bundle-ManifestVersion: 2
+Bundle-Name: MCWNC100
+Bundle-SymbolicName: MCWNC100-0.0.0
+Bundle-Version: 0.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: com.bbva.mcwn.dto.holder;version="0.0.0"
+Import-Package: java.io,java.lang,java.lang.invoke
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316

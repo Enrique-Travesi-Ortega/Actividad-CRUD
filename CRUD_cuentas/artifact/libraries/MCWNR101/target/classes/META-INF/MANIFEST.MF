@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1770811111648
+Build-Jdk-Spec: 11
+Bundle-Category: library
+Bundle-Description: Librería para el acceso a base de datos
+Bundle-ManifestVersion: 2
+Bundle-Name: MCWNR101
+Bundle-SymbolicName: MCWNR101-0.0.0
+Bundle-Version: 0.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: com.bbva.mcwn.lib.r101;uses:="com.bbva.mcwn.dto.holder";
+ version="0.0.0"
+Import-Package: com.bbva.mcwn.dto.holder;version="0.0",java.lang,java.ut
+ il
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316

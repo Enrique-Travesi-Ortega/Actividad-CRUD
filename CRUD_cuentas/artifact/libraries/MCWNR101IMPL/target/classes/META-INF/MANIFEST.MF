@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1770811119003
+Build-Jdk-Spec: 11
+Bundle-Category: library-jdbc
+Bundle-Description: Librería para el acceso a base de datos
+Bundle-ManifestVersion: 2
+Bundle-Name: MCWNR101IMPL
+Bundle-SymbolicName: MCWNR101IMPL-0.0.0
+Bundle-Version: 0.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Import-Package: com.bbva.apx.exception.db;version="0.0",com.bbva.elara.c
+ onfiguration.manager.application;version="0.0",com.bbva.elara.configura
+ tion.manager.application.factory;version="0.0",com.bbva.elara.library;v
+ ersion="0.0",com.bbva.elara.utility.jdbc;version="0.0",com.bbva.elara.u
+ tility.jdbc.connector.factory;version="0.0",com.bbva.mcwn.dto.holder;ve
+ rsion="0.0",com.bbva.mcwn.lib.r101;version="0.0",java.io,java.lang,java
+ .math,java.util,org.slf4j;version="0.0",org.springframework.dao;version
+ ="0.0",com.bbva.elara.aspect;version="0.0",org.aopalliance.aop;version=
+ "0.0",org.osgi.framework;version="0.0",org.springframework.aop;version=
+ "0.0",org.springframework.aop.framework;version="0.0",org.springframewo
+ rk.core;version="0.0",spring;version="0.0"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316

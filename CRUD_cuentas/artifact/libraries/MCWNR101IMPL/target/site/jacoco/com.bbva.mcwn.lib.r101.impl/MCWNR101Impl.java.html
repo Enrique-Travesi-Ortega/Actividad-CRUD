@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MCWNR101Impl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MCWNR101IMPL</a> &gt; <a href="index.source.html" class="el_package">com.bbva.mcwn.lib.r101.impl</a> &gt; <span class="el_source">MCWNR101Impl.java</span></div><h1>MCWNR101Impl.java</h1><pre class="source lang-java linenums">package com.bbva.mcwn.lib.r101.impl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+
+import com.bbva.apx.exception.db.NoResultException;
+import com.bbva.mcwn.dto.holder.AccountDTO;
+import com.bbva.mcwn.dto.holder.HolderDTO;
+
+/**
+ * The MCWNR101Impl class...
+ */
+<span class="fc" id="L20">public class MCWNR101Impl extends MCWNR101Abstract {</span>
+
+<span class="fc" id="L22">	private static final Logger LOGGER = LoggerFactory.getLogger(MCWNR101Impl.class);</span>
+
+	@Override
+	public HolderDTO executeCreateAccountAndOwner(HolderDTO holderIn) {
+
+<span class="nc" id="L27">		Map&lt;String, Object&gt; holder = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L28">		holder.put(&quot;FIRST_NAME&quot;, holderIn.getName());</span>
+<span class="nc" id="L29">		holder.put(&quot;LAST_NAME&quot;, holderIn.getLastName());</span>
+<span class="nc" id="L30">		holder.put(&quot;RFC&quot;, holderIn.getRfc());</span>
+<span class="nc" id="L31">		holder.put(&quot;CURP&quot;, holderIn.getCurp());</span>
+<span class="nc" id="L32">		holder.put(&quot;AGE&quot;,holderIn.getAge());</span>
+<span class="nc" id="L33">		holder.put(&quot;ACCOUNT_NUMBER&quot;, holderIn.getAccount().getAccountNumber());</span>
+<span class="nc" id="L34">		holder.put(&quot;NIP&quot;, holderIn.getAccount().getAccountNip());</span>
+<span class="nc" id="L35">		holder.put(&quot;CARD_NUMBER&quot;, holderIn.getAccount().getAccountCard());</span>
+<span class="nc" id="L36">		holder.put(&quot;BALANCE&quot;, holderIn.getAccount().getBalance());</span>
+<span class="nc" id="L37">		holder.put(&quot;CLIENT_TYPE&quot;, holderIn.getHolderType());</span>
+<span class="nc" id="L38">		holder.put(&quot;STATUS&quot;, 1);</span>
+		
+<span class="nc" id="L40">		Integer affectedRows = jdbcUtils.update(&quot;insert.account&quot;, holder);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">		if (affectedRows == 0) {</span>
+<span class="nc" id="L42">			this.addAdvice(&quot;MCWN01415040&quot;);</span>
+<span class="nc" id="L43">			return null;</span>
+		}
+		
+<span class="nc" id="L46">		HolderDTO newAccount = executeRetrieveAccountHolderTransaction(holderIn.getAccount().getAccountNumber());</span>
+		
+<span class="nc" id="L48">		return newAccount;</span>
+	}
+
+	@Override
+public HolderDTO executeRetrieveAccountHolderTransaction(Long accountNumber) {
+		
+<span class="nc" id="L54">		LOGGER.info(&quot;MCWNR101IMPL inicio ejecución de executeRetrieveAccountHolderTransaction&quot;);</span>
+		
+<span class="nc" id="L56">		Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L57">	    args.put(&quot;accountNumber&quot;, BigDecimal.valueOf(accountNumber));</span>
+ 
+	    try {
+<span class="nc" id="L60">	      Map&lt;String, Object&gt; accountData = jdbcUtils.queryForMap(&quot;select.account.by.accountNumber&quot;, args);</span>
+ 
+ 
+<span class="nc" id="L63">	      LOGGER.info(&quot;Accountsdata: {}&quot;, accountData);</span>
+ 
+<span class="nc bnc" id="L65" title="All 4 branches missed.">	      if (accountData != null &amp;&amp; !accountData.isEmpty()) {</span>
+ 
+<span class="nc" id="L67">	        HolderDTO holder = new HolderDTO();</span>
+<span class="nc" id="L68">	        holder.setName((String) accountData.get(&quot;FIRST_NAME&quot;));</span>
+<span class="nc" id="L69">	        holder.setLastName((String) accountData.get(&quot;LAST_NAME&quot;));</span>
+<span class="nc" id="L70">	        holder.setAge(parseBigDecimalToLong(accountData.get(&quot;AGE&quot;)));</span>
+<span class="nc" id="L71">	        holder.setCurp((String) accountData.get(&quot;CURP&quot;));</span>
+<span class="nc" id="L72">	        holder.setRfc((String) accountData.get(&quot;RFC&quot;));</span>
+<span class="nc" id="L73">	        Long clientType = parseBigDecimalToLong(accountData.get(&quot;CLIENT_TYPE&quot;));</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">	        holder.setHolderType (clientType !=null &amp;&amp; clientType == 0L ? &quot;Fisico&quot; : &quot;Moral&quot; );</span>
+ 
+ 
+<span class="nc" id="L77">	        AccountDTO innerAccount = new AccountDTO();</span>
+ 
+<span class="nc" id="L79">	        innerAccount.setAccountNumber(parseBigDecimalToLong(accountData.get(&quot;ACCOUNT_NUMBER&quot;)));</span>
+<span class="nc" id="L80">	        innerAccount.setAccountNip(parseBigDecimalToLong(accountData.get(&quot;NIP&quot;)));	        </span>
+<span class="nc" id="L81">	        innerAccount.setBalance(parseBigDecimalToDouble(accountData.get(&quot;BALANCE&quot;)));</span>
+<span class="nc" id="L82">	        innerAccount.setAccountCard(parseBigDecimalToLong(accountData.get(&quot;CARD_NUMBER&quot;)));</span>
+<span class="nc" id="L83">	        innerAccount.setStatus(parseBigDecimalToBoolean(accountData.get(&quot;STATUS&quot;)));</span>
+ 
+<span class="nc" id="L85">	        holder.setAccount(innerAccount);</span>
+<span class="nc" id="L86">	        LOGGER.info(&quot;Holder name: {}&quot;, holder.getLastName());</span>
+<span class="nc" id="L87">	        System.out.println(holder.toString());</span>
+<span class="nc" id="L88">	        return holder;</span>
+	      }
+ 
+	    }
+ 
+<span class="nc" id="L93">	    catch (NoResultException e) {</span>
+<span class="nc" id="L94">	      LOGGER.info(&quot;No account found for number={}&quot;, accountNumber);</span>
+<span class="nc" id="L95">	      return null;</span>
+ 
+<span class="nc" id="L97">	    }</span>
+<span class="nc" id="L98">	    return null;</span>
+ 
+ 
+	  }
+
+	@Override
+	public List&lt;HolderDTO&gt; executeGetAllAccounts() {
+<span class="nc" id="L105">		Map&lt;String,Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L106">		args.put(&quot;minStatus&quot;, 0);</span>
+<span class="nc" id="L107">		args.put(&quot;maxStatus&quot;, 1);</span>
+	
+<span class="nc" id="L109">	    List&lt;HolderDTO&gt; accountsList = new ArrayList&lt;&gt;();</span>
+ 
+	    try {
+<span class="nc" id="L112">	        List&lt;Map&lt;String,Object&gt;&gt; accountsData =</span>
+<span class="nc" id="L113">	                jdbcUtils.queryForList(&quot;select.accounts.by.status&quot;, args);</span>
+ 
+<span class="nc" id="L115">	        LOGGER.info(&quot;accountsData {}&quot;, accountsData);</span>
+ 
+<span class="nc bnc" id="L117" title="All 4 branches missed.">	        if (accountsData != null &amp;&amp; !accountsData.isEmpty()) {</span>
+ 
+<span class="nc bnc" id="L119" title="All 2 branches missed.">	            for (Map&lt;String,Object&gt; account : accountsData) {</span>
+ 
+<span class="nc" id="L121">	                HolderDTO holder = new HolderDTO();</span>
+<span class="nc" id="L122">	                holder.setName((String) account.get(&quot;FIRST_NAME&quot;));</span>
+<span class="nc" id="L123">	                holder.setLastName((String) account.get(&quot;LAST_NAME&quot;));</span>
+<span class="nc" id="L124">	                holder.setAge(parseBigDecimalToLong(account.get(&quot;AGE&quot;)));</span>
+<span class="nc" id="L125">	                holder.setCurp((String) account.get(&quot;CURP&quot;));</span>
+<span class="nc" id="L126">	                holder.setRfc((String) account.get(&quot;RFC&quot;));</span>
+ 
+<span class="nc" id="L128">	                Integer clientType = parseBigDecimalToInt(account.get(&quot;CLIENT_TYPE&quot;));</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">	                if (clientType != null) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">	                    if (clientType == 0) {</span>
+<span class="nc" id="L131">	                        holder.setHolderType(&quot;FISICO&quot;);</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">	                    } else if (clientType == 1) {</span>
+<span class="nc" id="L133">	                        holder.setHolderType(&quot;MORAL&quot;);</span>
+	                    }
+	                }
+ 
+<span class="nc" id="L137">	                AccountDTO innerAccount = new AccountDTO();</span>
+<span class="nc" id="L138">	                innerAccount.setAccountNumber(parseBigDecimalToLong(account.get(&quot;ACCOUNT_NUMBER&quot;)));</span>
+<span class="nc" id="L139">	                innerAccount.setAccountNip(parseBigDecimalToLong(account.get(&quot;NIP&quot;)));</span>
+<span class="nc" id="L140">	                innerAccount.setAccountCard(parseBigDecimalToLong(account.get(&quot;CARD_NUMBER&quot;)));</span>
+<span class="nc" id="L141">	                innerAccount.setBalance(parseBigDecimalToDouble(account.get(&quot;BALANCE&quot;)));</span>
+<span class="nc" id="L142">	                innerAccount.setStatus(parseBigDecimalToBoolean(account.get(&quot;STATUS&quot;)));</span>
+ 
+<span class="nc" id="L144">	                holder.setAccount(innerAccount);</span>
+ 
+<span class="nc" id="L146">	                accountsList.add(holder);</span>
+<span class="nc" id="L147">	            }</span>
+	        }
+ 
+<span class="nc" id="L150">	    } catch (EmptyResultDataAccessException e) {</span>
+<span class="nc" id="L151">	        LOGGER.info(&quot;No data found {}&quot;, e.getMessage());</span>
+<span class="nc" id="L152">	    }</span>
+ 
+<span class="nc" id="L154">	    return accountsList;</span>
+	}
+
+	@Override
+	public HolderDTO executeUpdateAccountHolderInfoTransaction(HolderDTO holderIn) {
+		
+<span class="nc" id="L160">		LOGGER.info(&quot;Entramos al metodo de la 101&quot;);</span>
+
+<span class="nc" id="L162">		 Map&lt;String, Object&gt; p = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L163">		    p.put(&quot;FIRST_NAME&quot;,   holderIn.getName());</span>
+<span class="nc" id="L164">		    p.put(&quot;LAST_NAME&quot;,    holderIn.getLastName());</span>
+<span class="nc" id="L165">		    p.put(&quot;RFC&quot;,          holderIn.getRfc());</span>
+<span class="nc" id="L166">		    p.put(&quot;CURP&quot;,         holderIn.getCurp());</span>
+<span class="nc" id="L167">		    p.put(&quot;AGE&quot;,          holderIn.getAge());</span>
+<span class="nc" id="L168">	        p.put(&quot;NIP&quot;,          holderIn.getAccount().getAccountNip());</span>
+<span class="nc" id="L169">	        p.put(&quot;CARD_NUMBER&quot;,  holderIn.getAccount().getAccountCard());</span>
+<span class="nc" id="L170">	        p.put(&quot;BALANCE&quot;,      holderIn.getAccount().getBalance());</span>
+<span class="nc" id="L171">		    p.put(&quot;CLIENT_TYPE&quot;,  holderIn.getHolderType());</span>
+<span class="nc" id="L172">		    p.put(&quot;ACCOUNT_NUMBER&quot;, holderIn.getAccount().getAccountNumber());</span>
+		    
+<span class="nc" id="L174">		    LOGGER.info(&quot;ESTADO DEL MAPA QUE METEREMOS EN BBDD: {}&quot;, p);</span>
+
+<span class="nc" id="L176">		    Integer affected = jdbcUtils.update(&quot;update.account.by.accountNumber&quot;, p);</span>
+		    
+<span class="nc" id="L178">		    LOGGER.info(&quot;Hemos conseguido hacer el cambio en bbdd&quot;);</span>
+
+<span class="nc bnc" id="L180" title="All 4 branches missed.">		    if (affected == null || affected == 0) {</span>
+<span class="nc" id="L181">		    	this.addAdvice(&quot;MCWN01415041&quot;);</span>
+<span class="nc" id="L182">		        return null;</span>
+		    }
+<span class="nc" id="L184">		    return executeRetrieveAccountHolderTransaction(holderIn.getAccount().getAccountNumber());</span>
+	}
+
+	public Integer checkStatusWithAccountNumber(Long accountNumber) {
+		
+<span class="nc" id="L189">		Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L190">		args.put(&quot;accountNumber&quot;, accountNumber);</span>
+		
+<span class="nc" id="L192">		LOGGER.info(&quot;EL valor de accountNumber del cual estamos buscando una cuenta es: {}&quot;, accountNumber);</span>
+
+<span class="nc" id="L194">		List&lt;Map&lt;String, Object&gt;&gt; rows = jdbcUtils.queryForList(&quot;check.status.by.accountNumber&quot;, args);</span>
+
+<span class="nc bnc" id="L196" title="All 4 branches missed.">	    if (rows == null || rows.isEmpty()) {</span>
+<span class="nc" id="L197">	        LOGGER.debug(&quot;No se encontró ninguna cuenta para accountNumber={}&quot;, accountNumber);</span>
+<span class="nc" id="L198">	        return null;</span>
+	    }
+	
+<span class="nc" id="L201">	    Map&lt;String, Object&gt; firstRow = rows.get(0);</span>
+<span class="nc" id="L202">	    LOGGER.debug(&quot;Fila encontrada: {}&quot;, firstRow);</span>
+	
+<span class="nc" id="L204">	    return convertBigDecimalToInteger(firstRow.get(&quot;STATUS&quot;));</span>
+	}
+
+	
+	public Integer checkStatusWithAccountCard(Long accountCard) {
+		
+<span class="nc" id="L210">		Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L211">		args.put(&quot;accountCard&quot;, accountCard);</span>
+		
+
+<span class="nc" id="L214">		List&lt;Map&lt;String, Object&gt;&gt; rows = jdbcUtils.queryForList(&quot;check.status.by.accountCard&quot;, args);</span>
+
+<span class="nc bnc" id="L216" title="All 4 branches missed.">		if (rows == null || rows.isEmpty()) {</span>
+<span class="nc" id="L217">			LOGGER.debug(&quot;No se encontró ninguna cuenta para accountCard={}&quot;, accountCard);</span>
+<span class="nc" id="L218">			return null; // sin coincidencias → null</span>
+		}
+
+<span class="nc" id="L221">		Map&lt;String, Object&gt; firstRow = rows.get(0);</span>
+<span class="nc" id="L222">		LOGGER.debug(&quot;Fila encontrada: {}&quot;, firstRow);</span>
+
+		// Asegúrate que la columna/alias es exactamente &quot;STATUS&quot; en el SQL
+<span class="nc" id="L225">		return convertBigDecimalToInteger(firstRow.get(&quot;STATUS&quot;));</span>
+	}
+	
+	private static Integer convertBigDecimalToInteger(Object object) {
+<span class="nc bnc" id="L229" title="All 2 branches missed.">	    if (object instanceof BigDecimal) {</span>
+<span class="nc" id="L230">	      return ((BigDecimal) object).intValue();</span>
+	    }
+<span class="nc" id="L232">	    return null;</span>
+	  }
+	
+	@Override
+	public Boolean executeGetAccountExists(Long accountNumber) {
+<span class="nc" id="L237">	    LOGGER.info(&quot;MCWNR101Impl: executeGetAccountExists - start, accountNumber={}&quot;, accountNumber);</span>
+	    try {
+<span class="nc" id="L239">	        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L240">	        args.put(&quot;accountNumber&quot;, accountNumber);</span>
+ 
+<span class="nc" id="L242">	        List&lt;Map&lt;String,Object&gt;&gt; rows =</span>
+<span class="nc" id="L243">	                jdbcUtils.queryForList(&quot;select.account.exists.by.accountNumber&quot;, args);</span>
+ 
+<span class="nc bnc" id="L245" title="All 4 branches missed.">	        return (rows != null &amp;&amp; !rows.isEmpty());</span>
+ 
+<span class="nc" id="L247">	    } catch (Exception ex) {</span>
+<span class="nc" id="L248">	        LOGGER.error(&quot;MCWNR101Impl: Error consultando existencia de cuenta&quot;, ex);</span>
+<span class="nc" id="L249">	        this.addAdvice(&quot;MCWN01415041&quot;, &quot;Fallo técnico verificando existencia&quot;, ex);</span>
+<span class="nc" id="L250">	        return false;</span>
+	    }
+	}
+	
+	@Override
+	public Boolean executeGetAccountIsActive(Long accountNumber) {
+<span class="nc" id="L256">	    LOGGER.info(&quot;MCWNR101Impl: executeGetAccountIsActive - start, accountNumber={}&quot;, accountNumber);</span>
+	    try {
+<span class="nc" id="L258">	        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L259">	        args.put(&quot;accountNumber&quot;, accountNumber);</span>
+ 
+<span class="nc" id="L261">	        List&lt;Map&lt;String,Object&gt;&gt; rows =</span>
+<span class="nc" id="L262">	                jdbcUtils.queryForList(&quot;select.account.status.by.accountNumber&quot;, args);</span>
+ 
+<span class="nc bnc" id="L264" title="All 4 branches missed.">	        if (rows == null || rows.isEmpty()) {</span>
+<span class="nc" id="L265">	            return false;</span>
+	        }
+ 
+<span class="nc" id="L268">	        Integer status = parseBigDecimalToInt(rows.get(0).get(&quot;STATUS&quot;));</span>
+<span class="nc bnc" id="L269" title="All 4 branches missed.">	        return status != null &amp;&amp; status != 0;</span>
+ 
+<span class="nc" id="L271">	    } catch (Exception ex) {</span>
+<span class="nc" id="L272">	        LOGGER.error(&quot;MCWNR101Impl: Error consultando estado de cuenta&quot;, ex);</span>
+<span class="nc" id="L273">	        this.addAdvice(&quot;MCWN01415041&quot;, &quot;Fallo técnico verificando estado de cuenta&quot;, ex);</span>
+<span class="nc" id="L274">	        return false;</span>
+	    }
+	}
+	
+	@Override
+	public Boolean executeUpdateAccountStatus(Long accountNumber, int status) {
+<span class="nc" id="L280">	    LOGGER.info(&quot;MCWNR101Impl: executeUpdateAccountStatus - start, accountNumber={}, status={}&quot;,</span>
+<span class="nc" id="L281">	            accountNumber, status);</span>
+	    try {
+<span class="nc" id="L283">	        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L284">	        args.put(&quot;accountNumber&quot;, accountNumber);</span>
+<span class="nc" id="L285">	        args.put(&quot;status&quot;, status);</span>
+ 
+<span class="nc bnc" id="L287" title="All 2 branches missed.">	        return jdbcUtils.update(&quot;update.account.status.by.accountNumber&quot;, args) &gt; 0;</span>
+ 
+<span class="nc" id="L289">	    } catch (Exception ex) {</span>
+<span class="nc" id="L290">	        LOGGER.error(&quot;MCWNR101Impl: Error actualizando estado de cuenta&quot;, ex);</span>
+<span class="nc" id="L291">	        this.addAdvice(&quot;MCWN01415041&quot;, &quot;Fallo técnico actualizando estado de cuenta&quot;, ex);</span>
+<span class="nc" id="L292">	        return false;</span>
+	    }
+	}
+	
+	private static Long parseBigDecimalToLong(Object object) {
+<span class="nc bnc" id="L297" title="All 2 branches missed.">		if(object instanceof BigDecimal) {</span>
+<span class="nc" id="L298">			return ((BigDecimal) object).longValue();</span>
+		}
+<span class="nc" id="L300">		return null;</span>
+	}
+	
+	private static Integer parseBigDecimalToInteger(Object object) {
+<span class="nc bnc" id="L304" title="All 2 branches missed.">		if(object instanceof BigDecimal) {</span>
+<span class="nc" id="L305">			return ((BigDecimal) object).intValue();</span>
+		}
+<span class="nc" id="L307">		return null;</span>
+	}
+	
+	private static Double parseBigDecimalToDouble(Object object) {
+<span class="nc bnc" id="L311" title="All 2 branches missed.">	    if (object == null) return null;</span>
+
+<span class="nc bnc" id="L313" title="All 2 branches missed.">	    if (object instanceof BigDecimal) {</span>
+<span class="nc" id="L314">	        return ((BigDecimal) object).doubleValue();</span>
+	    }
+<span class="nc bnc" id="L316" title="All 2 branches missed.">	    if (object instanceof Number) {</span>
+<span class="nc" id="L317">	        return ((Number) object).doubleValue();</span>
+	    }
+<span class="nc" id="L319">	    return Double.valueOf(object.toString());</span>
+	}
+
+	
+	private static Boolean parseBigDecimalToBoolean(Object object) {
+<span class="nc bnc" id="L324" title="All 2 branches missed.">	    if (object == null) return null;</span>
+
+<span class="nc bnc" id="L326" title="All 2 branches missed.">	    if (object instanceof Boolean) {</span>
+<span class="nc" id="L327">	        return (Boolean) object;</span>
+	    }
+<span class="nc bnc" id="L329" title="All 2 branches missed.">	    if (object instanceof Number) {</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">	        return ((Number) object).intValue() == 1;</span>
+	    }
+
+<span class="nc" id="L333">	    String value = object.toString().trim().toLowerCase();</span>
+<span class="nc bnc" id="L334" title="All 8 branches missed.">	    return value.equals(&quot;1&quot;) || value.equals(&quot;true&quot;) || value.equals(&quot;y&quot;) || value.equals(&quot;yes&quot;);</span>
+	}
+
+
+	private static Integer parseBigDecimalToInt(Object object) {
+<span class="nc bnc" id="L339" title="All 2 branches missed.">	    if (object == null) {</span>
+<span class="nc" id="L340">	        return null;</span>
+	    }
+
+<span class="nc bnc" id="L343" title="All 2 branches missed.">	    if (object instanceof BigDecimal) {</span>
+<span class="nc" id="L344">	        return ((BigDecimal) object).intValue();</span>
+	    }
+
+<span class="nc bnc" id="L347" title="All 2 branches missed.">	    if (object instanceof Number) {</span>
+<span class="nc" id="L348">	        return ((Number) object).intValue();</span>
+	    }
+
+	    try {
+<span class="nc" id="L352">	        return Integer.valueOf(object.toString());</span>
+<span class="nc" id="L353">	    } catch (NumberFormatException e) {</span>
+<span class="nc" id="L354">	        return null;</span>
+	    }
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
