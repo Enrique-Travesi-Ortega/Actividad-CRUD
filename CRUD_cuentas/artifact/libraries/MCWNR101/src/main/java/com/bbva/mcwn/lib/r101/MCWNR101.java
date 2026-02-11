@@ -14,9 +14,14 @@ public interface MCWNR101 {
 	 * The execute method...
 	 */
 	HolderDTO executeCreateAccountAndOwner(HolderDTO holderIn);
-	HolderDTO executeRetrieveAccountHolderTransaction(AccountDTO accountIn);
+	HolderDTO executeRetrieveAccountHolderTransaction(Long accountNumber);
 	List<HolderDTO> executeGetAllAccounts();
 	HolderDTO executeUpdateAccountHolderInfoTransaction(HolderDTO holderIn);
-	Boolean executeManageAccountStatusTransaction(AccountDTO accountIn);
+	
+	Integer checkStatusWithAccountNumber(Long accountNumber);
+	Integer checkStatusWithAccountCard(Long accountCard);
+	Boolean executeUpdateAccountStatus(Long accountNumber, int status);
+	Boolean executeGetAccountIsActive(Long accountNumber);
+	Boolean executeGetAccountExists(Long accountNumber);
 
 }

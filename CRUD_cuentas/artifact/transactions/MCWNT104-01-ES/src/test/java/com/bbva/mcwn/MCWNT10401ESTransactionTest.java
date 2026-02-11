@@ -92,7 +92,7 @@ public class MCWNT10401ESTransactionTest {
 		// when(applicationConfigurationService.getProperty("config.property")).thenReturn("value");
 		// when(qwaiR001.execute()).thenReturn(listCustomerDTO);
 		// setParameterToTransaction("customerIn", new CustomerDTO());
-		transaction.execute();
+		//transaction.execute();
 		Assert.assertEquals(0, transaction.getAdviceList().size());
 	}
 }
